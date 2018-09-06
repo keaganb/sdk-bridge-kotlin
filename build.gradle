@@ -1,0 +1,25 @@
+apply plugin: 'kotlin'
+
+buildscript {
+    ext.kotlin_version = '1.2.60'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+    testCompile "org.jetbrains.kotlin:kotlin-test"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
+    compile project(':sdk-core-kotlin')
+    compile project(':mod-tcp-kotlin')
+}
