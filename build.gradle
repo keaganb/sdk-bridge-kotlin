@@ -20,6 +20,6 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
-    compile project(':sdk-core-kotlin')
+    compile project(':sdk-sentinel-kotlin')
     compile project(':mod-tcp-kotlin')
 }

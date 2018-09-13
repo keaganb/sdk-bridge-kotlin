@@ -1,4 +1,6 @@
 include ':sdk-core-kotlin', 'sdk-core-kotlin'
 include ':mod-tcp-kotlin', 'mod-tcp-kotlin'
+include ':sdk-sentinel-kotlin', 'sdk-sentinel-kotlin'
 project(':mod-tcp-kotlin').projectDir = new File("../mod-tcp-kotlin")
 project(':sdk-core-kotlin').projectDir = new File("../sdk-core-kotlin")
+project(':sdk-sentinel-kotlin').projectDir = new File("../sdk-sentinel-kotlin")
