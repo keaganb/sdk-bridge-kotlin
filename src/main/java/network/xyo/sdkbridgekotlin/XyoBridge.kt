@@ -22,16 +22,29 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
                       storageProvider : XyoStorageProviderInterface,
                       hashingProvider : XyoHash.XyoHashProvider) : XyoRelayNode(storageProvider, hashingProvider) {
 
+    private var whoToTalkTo : XyoBridgeTalkTo = XyoBridgeTalkTo.BOTH
 
     override val procedureCatalogue : XyoNetworkProcedureCatalogueInterface = XyoBridgeCollectorProcedureCatalogue()
 
     override suspend fun findSomeoneToTalkTo() = suspendCoroutine<XyoNetworkPipe> { cont ->
-        async {
-            cont.resume(bridgeFromNetwork.find(procedureCatalogue))
+        if (whoToTalkTo == XyoBridgeTalkTo.COLLECT || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
+            async {
+                cont.resume(bridgeFromNetwork.find(procedureCatalogue))
+            }
         }
 
-        async {
-            cont.resume(bridgeToNetwork.find(procedureCatalogue))
+        if (whoToTalkTo == XyoBridgeTalkTo.SEND || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
+            async {
+                cont.resume(bridgeToNetwork.find(procedureCatalogue))
+            }
+        }
+    }
+
+    companion object {
+        private enum class XyoBridgeTalkTo {
+            COLLECT,
+            SEND,
+            BOTH
         }
     }
 }
