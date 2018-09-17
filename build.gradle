@@ -1,4 +1,5 @@
 apply plugin: 'kotlin'
+group="com.github.XYOracleNetwork"
 
 buildscript {
     ext.kotlin_version = '1.2.60'
@@ -7,19 +8,27 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4"
     }
 }
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+test {
+    useJUnit()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect"
-    testCompile "org.jetbrains.kotlin:kotlin-test"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+
+    testImplementation 'junit:junit:4.12'
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'com.github.XYOracleNetwork:mod-tcp-kotlin:39112f14c2'
+
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
-    compile project(':sdk-sentinel-kotlin')
-    compile project(':mod-tcp-kotlin')
+    implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:master-SNAPSHOT'
 }

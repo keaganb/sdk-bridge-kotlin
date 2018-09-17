@@ -14,10 +14,6 @@ class XyoBridgeCollectorProcedureCatalogue : XyoNetworkProcedureCatalogueInterfa
         return whatBridgeCanDoForOtherEncoded
     }
 
-    override fun sizeToRead(): Int {
-        return 4
-    }
-
     companion object {
         private const val whatBridgeCanDoForOther = XyoProcedureCatalogue.BOUND_WITNESS or XyoProcedureCatalogue.GIVE_ORIGIN_CHAIN or XyoProcedureCatalogue.TAKE_ORIGIN_CHAIN
         private const val whatBridgeCanDoWithOther = XyoProcedureCatalogue.BOUND_WITNESS or XyoProcedureCatalogue.TAKE_ORIGIN_CHAIN or XyoProcedureCatalogue.GIVE_ORIGIN_CHAIN
