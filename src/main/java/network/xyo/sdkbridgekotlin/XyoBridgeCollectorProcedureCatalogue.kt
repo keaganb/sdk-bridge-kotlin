@@ -4,6 +4,9 @@ import network.xyo.sdkcorekotlin.network.XyoNetworkProcedureCatalogueInterface
 import network.xyo.sdkcorekotlin.network.XyoProcedureCatalogue
 import java.nio.ByteBuffer
 
+/**
+ * A bridges Procedure Catalogue.
+ */
 class XyoBridgeCollectorProcedureCatalogue : XyoNetworkProcedureCatalogueInterface {
     override fun canDo(byteArray: ByteArray): Boolean {
         val bitFlags = ByteBuffer.wrap(byteArray).int

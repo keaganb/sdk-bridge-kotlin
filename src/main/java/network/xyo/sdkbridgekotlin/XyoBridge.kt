@@ -9,6 +9,14 @@ import network.xyo.sdkcorekotlin.node.*
 import network.xyo.sdkcorekotlin.storage.XyoStorageProviderInterface
 import kotlin.coroutines.experimental.suspendCoroutine
 
+/**
+ * A functional Xyo Network Bridge.
+ *
+ * @param bridgeFromNetwork The network to collect data from and relay to archivists.
+ * @param bridgeToNetwork The network to send the data to.
+ * @param storageProvider The place to store all the origin blocks.
+ * @pram hashingProvider The hashing provider to use.
+ */
 open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterface,
                       private val bridgeToNetwork :  XyoNetworkProviderInterface,
                       storageProvider : XyoStorageProviderInterface,
