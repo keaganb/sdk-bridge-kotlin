@@ -16,10 +16,6 @@ myBridge.originState.addSigner(XyoSha256WithSecp256K()) // add a signer
 myBridge.start() // start the bridge!
 ```
 
-private val bridgeFromNetwork : XyoNetworkProviderInterface,
-                      private val bridgeToNetwork :  XyoNetworkProviderInterface,
-                      storageProvider : XyoStorageProviderInterface,
-                      hashingProvider : XyoHash.XyoHashProvider
 
 ## Installing
 You can add sdk-bridge-kotlin to your existing app by cloning the project and manually adding it to your build.gradle or by using JitPack:
