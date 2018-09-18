@@ -9,14 +9,11 @@ val myNetworkToCollect : XyoNetworkProvider = MySuperCoolNetwok()
 val myNetworkToSend : XyoNetworkProvider = XyoTcpNetwork(8080)
 val myStorageProvider : XyoStorageProviderInterface = XyoFileStorage(File("/xyo"))
 val myHasher : XyoHashProvider = XyoSha256
+
 val myBridge = XyoBridge(myNetworkToCollect, myNetworkToSend, myStorageProvider, myHasher)
+
 myBridge.originState.addSigner(XyoSha256WithSecp256K()) // add a signer
 myBridge.start() // start the bridge!
-
-
-
-
-
 ```
 
 private val bridgeFromNetwork : XyoNetworkProviderInterface,
