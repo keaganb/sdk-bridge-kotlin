@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/XYOracleNetwork/sdk-bridge-kotlin.svg)](https://jitpack.io/#XYOracleNetwork/sdk-core-kotlin) [![](https://img.shields.io/gitter/room/XYOracleNetwork/Stardust.svg)](https://gitter.im/XYOracleNetwork/Dev) [![](https://circleci.com/gh/XYOracleNetwork/sdk-bridge-kotlin.svg?style=shield)](https://circleci.com/gh/XYOracleNetwork/sdk-bridge-kotlin)
 
-A library for creating a XYO Network Sentinel. Its as easy as:
+A library for creating a XYO Network Bridge. Its as easy as:
 
 ```kotlin
 val myNetworkToCollect : XyoNetworkProvider = MySuperCoolNetwok()
@@ -15,7 +15,7 @@ val myBridge = XyoBridge(myNetworkToCollect, myNetworkToSend, myStorageProvider,
 myBridge.originState.addSigner(XyoSha256WithSecp256K()) // add a signer
 myBridge.start() // start the bridge!
 
-myBridge.addListener("Sentinel Listener", object : XyoNodeListener {
+myBridge.addListener("Bridge Listener", object : XyoNodeListener {
     override fun onBoundWitnessEndFailure(error: Exception?) {
         /* an error occored */
     }
