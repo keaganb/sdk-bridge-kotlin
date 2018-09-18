@@ -14,6 +14,20 @@ val myBridge = XyoBridge(myNetworkToCollect, myNetworkToSend, myStorageProvider,
 
 myBridge.originState.addSigner(XyoSha256WithSecp256K()) // add a signer
 myBridge.start() // start the bridge!
+
+myBridge.addListener("Sentinel Listener", object : XyoNodeListener {
+    override fun onBoundWitnessEndFailure(error: Exception?) {
+        /* an error occored */
+    }
+
+    override fun onBoundWitnessDiscovered(boundWitness: XyoBoundWitness) {
+        /* discovered a new bound witness (originBlock) */
+    }
+
+    override fun onBoundWitnessStart() {
+        /* started creating a bound witness with another party */
+    }
+})
 ```
 
 
