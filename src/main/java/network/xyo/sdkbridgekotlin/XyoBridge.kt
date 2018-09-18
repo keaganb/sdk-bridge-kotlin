@@ -22,7 +22,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
                       storageProvider : XyoStorageProviderInterface,
                       hashingProvider : XyoHash.XyoHashProvider) : XyoRelayNode(storageProvider, hashingProvider) {
 
-    private var whoToTalkTo : XyoBridgeTalkTo = XyoBridgeTalkTo.BOTH
+    protected var whoToTalkTo : XyoBridgeTalkTo = XyoBridgeTalkTo.BOTH
 
     override val procedureCatalogue : XyoNetworkProcedureCatalogueInterface = XyoBridgeCollectorProcedureCatalogue()
 
@@ -41,7 +41,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
     }
 
     companion object {
-        private enum class XyoBridgeTalkTo {
+        enum class XyoBridgeTalkTo {
             COLLECT,
             SEND,
             BOTH
