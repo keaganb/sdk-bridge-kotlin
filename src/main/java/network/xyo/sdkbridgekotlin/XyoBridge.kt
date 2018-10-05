@@ -1,12 +1,13 @@
 package network.xyo.sdkbridgekotlin
 
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.*
 import network.xyo.sdkcorekotlin.hashing.XyoHash
 import network.xyo.sdkcorekotlin.network.XyoNetworkPipe
 import network.xyo.sdkcorekotlin.network.XyoNetworkProcedureCatalogueInterface
 import network.xyo.sdkcorekotlin.network.XyoNetworkProviderInterface
 import network.xyo.sdkcorekotlin.node.*
 import network.xyo.sdkcorekotlin.storage.XyoStorageProviderInterface
+import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
@@ -22,22 +23,74 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
                       storageProvider : XyoStorageProviderInterface,
                       hashingProvider : XyoHash.XyoHashProvider) : XyoRelayNode(storageProvider, hashingProvider) {
 
-    protected var whoToTalkTo : XyoBridgeTalkTo = XyoBridgeTalkTo.BOTH
+    private var index = 0
+    private var isBridging = true
+    protected val whoToTalkTo : XyoBridgeTalkTo
+            get() = nextChoice()
 
-    override val procedureCatalogue : XyoNetworkProcedureCatalogueInterface = XyoBridgeCollectorProcedureCatalogue()
 
+    override val procedureCatalogue = XyoBridgeCollectorProcedureCatalogue()
+
+    /**
+     * The problem is that the whoToTalkTo is a getter and it can get to the bottom
+     */
     override suspend fun findSomeoneToTalkTo() = suspendCoroutine<XyoNetworkPipe> { cont ->
+        var bridgeFromFinder : Deferred<XyoNetworkPipe?>? = null
+        var bridgeToFinder : Deferred<XyoNetworkPipe?>? = null
+        var bridgeFromFinderHandler : Deferred<Unit>?= null
+        var bridgeToFinderHandler : Deferred<Unit>? = null
+
         if (whoToTalkTo == XyoBridgeTalkTo.COLLECT || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
-            async {
-                cont.resume(bridgeFromNetwork.find(procedureCatalogue))
+            println(XyoBridgeTalkTo.COLLECT)
+            bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
+            bridgeFromFinderHandler = async {
+                val con = bridgeFromFinder.await()!!
+                index++
+
+                bridgeFromNetwork.stop()
+                bridgeToNetwork.stop()
+
+                cont.resume(con)
+                bridgeToFinder?.cancel()
+                bridgeFromFinder.cancel()
+                bridgeToFinderHandler?.cancel()
+                bridgeFromFinderHandler?.cancel()
+                coroutineContext.cancel()
+                return@async
             }
         }
 
         if (whoToTalkTo == XyoBridgeTalkTo.SEND || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
-            async {
-                cont.resume(bridgeToNetwork.find(procedureCatalogue))
+            println(XyoBridgeTalkTo.SEND)
+            bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
+            bridgeToFinderHandler = async {
+                val con = bridgeToFinder.await()!!
+                index++
+
+                bridgeFromNetwork.stop()
+                bridgeToNetwork.stop()
+
+                cont.resume(con)
+                bridgeFromFinder?.cancel()
+                bridgeToFinder.cancel()
+                bridgeFromFinderHandler?.cancel()
+                bridgeToFinderHandler?.cancel()
+                coroutineContext.cancel()
+                return@async
             }
         }
+    }
+
+    private fun nextChoice () : XyoBridgeTalkTo {
+        if (index % 2 == 0 && isBridging) {
+            return XyoBridgeTalkTo.SEND
+        }
+        return XyoBridgeTalkTo.COLLECT
+    }
+
+    fun enableBridgeing (boolean: Boolean) {
+        isBridging = boolean
+        procedureCatalogue.enableBridgeing(boolean)
     }
 
     companion object {
