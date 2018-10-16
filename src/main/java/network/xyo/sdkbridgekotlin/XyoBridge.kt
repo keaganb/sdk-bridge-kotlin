@@ -41,7 +41,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
         if (whoToTalkTo == XyoBridgeTalkTo.COLLECT || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
             println(XyoBridgeTalkTo.COLLECT)
             bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
-            bridgeFromFinderHandler = async {
+            bridgeFromFinderHandler = GlobalScope.async {
                 val con = bridgeFromFinder.await()!!
                 index++
 
@@ -61,7 +61,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
         if (whoToTalkTo == XyoBridgeTalkTo.SEND || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
             println(XyoBridgeTalkTo.SEND)
             bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
-            bridgeToFinderHandler = async {
+            bridgeToFinderHandler = GlobalScope.async {
                 val con = bridgeToFinder.await()!!
                 index++
 
