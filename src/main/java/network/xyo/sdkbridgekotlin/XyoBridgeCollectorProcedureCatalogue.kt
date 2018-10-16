@@ -13,7 +13,7 @@ class XyoBridgeCollectorProcedureCatalogue : XyoNetworkProcedureCatalogueInterfa
     private val whatBridgeCanDoForOther : Int
         get() {
             if (isBridging) {
-                return XyoProcedureCatalogue.BOUND_WITNESS or XyoProcedureCatalogue.GIVE_ORIGIN_CHAIN or XyoProcedureCatalogue.TAKE_ORIGIN_CHAIN
+                return XyoProcedureCatalogue.BOUND_WITNESS or XyoProcedureCatalogue.TAKE_ORIGIN_CHAIN or XyoProcedureCatalogue.GIVE_ORIGIN_CHAIN
             }
             return XyoProcedureCatalogue.BOUND_WITNESS or XyoProcedureCatalogue.GIVE_ORIGIN_CHAIN
         }
@@ -30,7 +30,7 @@ class XyoBridgeCollectorProcedureCatalogue : XyoNetworkProcedureCatalogueInterfa
     private val whatBridgeCanDoForOtherEncoded : ByteArray
         get() = ByteBuffer.allocate(4).putInt(whatBridgeCanDoForOther).array()
 
-    fun enableBridgeing(boolean: Boolean) {
+    fun enableBridging(boolean: Boolean) {
         isBridging = boolean
     }
 

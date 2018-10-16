@@ -3,11 +3,9 @@ package network.xyo.sdkbridgekotlin
 import kotlinx.coroutines.experimental.*
 import network.xyo.sdkcorekotlin.hashing.XyoHash
 import network.xyo.sdkcorekotlin.network.XyoNetworkPipe
-import network.xyo.sdkcorekotlin.network.XyoNetworkProcedureCatalogueInterface
 import network.xyo.sdkcorekotlin.network.XyoNetworkProviderInterface
 import network.xyo.sdkcorekotlin.node.*
 import network.xyo.sdkcorekotlin.storage.XyoStorageProviderInterface
-import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
@@ -88,9 +86,9 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
         return XyoBridgeTalkTo.COLLECT
     }
 
-    fun enableBridgeing (boolean: Boolean) {
+    fun enableBridging (boolean: Boolean) {
         isBridging = boolean
-        procedureCatalogue.enableBridgeing(boolean)
+        procedureCatalogue.enableBridging(boolean)
     }
 
     companion object {
