@@ -2,7 +2,7 @@ apply plugin: 'kotlin'
 group="com.github.XYOracleNetwork"
 
 buildscript {
-    ext.kotlin_version = '1.2.51'
+    ext.kotlin_version = '1.2.71'
     repositories {
         mavenCentral()
     }
@@ -27,11 +27,11 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    implementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:develop-SNAPSHOT'
-    // implementation project (':mod-tcp-kotlin')
+    //implementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:develop-SNAPSHOT'
+     implementation project (':mod-tcp-kotlin')
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.0"
 
-    implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:develop-SNAPSHOT'
-    //implementation project (':sdk-core-kotlin')
+    //implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:develop-SNAPSHOT'
+    implementation project (':sdk-core-kotlin')
 }
