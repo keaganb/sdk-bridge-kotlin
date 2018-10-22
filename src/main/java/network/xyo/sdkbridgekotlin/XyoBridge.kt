@@ -82,7 +82,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
     }
 
     private fun nextChoice () : XyoBridgeTalkTo {
-        if (index % 2 == 0 && isBridging) {
+        if (index % 3 == 0 && isBridging) {
             return XyoBridgeTalkTo.SEND
         }
         return XyoBridgeTalkTo.COLLECT
@@ -99,6 +99,6 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
             SEND
         }
 
-        const val PRIORITY_HEAD_START = 20_000
+        const val PRIORITY_HEAD_START = 60_000
     }
 }

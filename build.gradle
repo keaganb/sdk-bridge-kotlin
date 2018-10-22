@@ -32,6 +32,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.0"
 
-    //implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:develop-SNAPSHOT'
+    // implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:develop-SNAPSHOT'
     implementation project (':sdk-core-kotlin')
 }
