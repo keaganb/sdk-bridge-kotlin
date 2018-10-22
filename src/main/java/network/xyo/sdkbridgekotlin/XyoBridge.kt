@@ -23,8 +23,6 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
 
     private var index = 0
     private var isBridging = true
-    protected val whoToTalkTo : XyoBridgeTalkTo
-            get() = nextChoice()
 
 
     override val procedureCatalogue = XyoBridgeCollectorProcedureCatalogue()
@@ -40,10 +38,6 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
 
         bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
         bridgeFromFinderHandler = GlobalScope.async {
-            if (whoToTalkTo == XyoBridgeTalkTo.SEND) {
-                delay((PRIORITY_HEAD_START * Math.random()).toInt())
-            }
-
             val con = bridgeFromFinder.await()!!
             index++
 
@@ -59,33 +53,27 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
             return@async
         }
 
-        bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
-        bridgeToFinderHandler = GlobalScope.async {
-            if (whoToTalkTo == XyoBridgeTalkTo.COLLECT) {
+
+        if (index % WHEN_TO_BRIDGE == 0 && isBridging) {
+            bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
+            bridgeToFinderHandler = GlobalScope.async {
                 delay((PRIORITY_HEAD_START * Math.random()).toInt())
+
+                val con = bridgeToFinder.await()!!
+                index++
+
+                bridgeFromNetwork.stop()
+                bridgeToNetwork.stop()
+
+                cont.resume(con)
+                bridgeFromFinder.cancel()
+                bridgeToFinder.cancel()
+                bridgeFromFinderHandler.cancel()
+                bridgeToFinderHandler?.cancel()
+                coroutineContext.cancel()
+                return@async
             }
-
-            val con = bridgeToFinder.await()!!
-            index++
-
-            bridgeFromNetwork.stop()
-            bridgeToNetwork.stop()
-
-            cont.resume(con)
-            bridgeFromFinder.cancel()
-            bridgeToFinder.cancel()
-            bridgeFromFinderHandler.cancel()
-            bridgeToFinderHandler?.cancel()
-            coroutineContext.cancel()
-            return@async
         }
-    }
-
-    private fun nextChoice () : XyoBridgeTalkTo {
-        if (index % 3 == 0 && isBridging) {
-            return XyoBridgeTalkTo.SEND
-        }
-        return XyoBridgeTalkTo.COLLECT
     }
 
     fun enableBridging (boolean: Boolean) {
@@ -94,11 +82,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
     }
 
     companion object {
-        enum class XyoBridgeTalkTo {
-            COLLECT,
-            SEND
-        }
-
+        const val WHEN_TO_BRIDGE = 3
         const val PRIORITY_HEAD_START = 60_000
     }
 }
