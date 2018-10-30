@@ -1,13 +1,12 @@
 package network.xyo.sdkbridgekotlin
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.experimental.*
 import network.xyo.sdkcorekotlin.hashing.XyoHash
 import network.xyo.sdkcorekotlin.network.XyoNetworkPipe
 import network.xyo.sdkcorekotlin.network.XyoNetworkProviderInterface
 import network.xyo.sdkcorekotlin.node.*
 import network.xyo.sdkcorekotlin.storage.XyoStorageProviderInterface
-import kotlin.coroutines.suspendCoroutine
-import kotlin.coroutines.resume
+import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
  * A functional Xyo Network Bridge.
@@ -34,12 +33,11 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
 
         bridgeFromFinderHandler = GlobalScope.async {
             if (index % WHEN_TO_FORCE_BRIDGE == 0 && isBridging) {
-                delay(PRIORITY_HEAD_START.toLong())
+                delay(PRIORITY_HEAD_START)
             }
 
             bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
             val con = bridgeFromFinder?.await()!!
-            println("RESUMED 1337")
             index++
 
             bridgeFromNetwork.stop()
@@ -61,7 +59,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
         if (isBridging) {
             bridgeToFinderHandler = GlobalScope.async {
                 if (index % WHEN_TO_FORCE_BRIDGE != 0) {
-                    delay((PRIORITY_HEAD_START.toLong()))
+                    delay((PRIORITY_HEAD_START))
                 }
 
                 bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
@@ -93,6 +91,6 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
 
     companion object {
         const val WHEN_TO_FORCE_BRIDGE = 10
-        const val PRIORITY_HEAD_START = 120_000
+        const val PRIORITY_HEAD_START = 60_000
     }
 }
