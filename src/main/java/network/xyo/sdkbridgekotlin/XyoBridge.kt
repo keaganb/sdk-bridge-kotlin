@@ -1,13 +1,13 @@
 package network.xyo.sdkbridgekotlin
 
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.*
 import network.xyo.sdkcorekotlin.hashing.XyoHash
 import network.xyo.sdkcorekotlin.network.XyoNetworkPipe
-import network.xyo.sdkcorekotlin.network.XyoNetworkProcedureCatalogueInterface
 import network.xyo.sdkcorekotlin.network.XyoNetworkProviderInterface
 import network.xyo.sdkcorekotlin.node.*
 import network.xyo.sdkcorekotlin.storage.XyoStorageProviderInterface
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.suspendCoroutine
+import kotlin.coroutines.resume
 
 /**
  * A functional Xyo Network Bridge.
@@ -22,29 +22,76 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
                       storageProvider : XyoStorageProviderInterface,
                       hashingProvider : XyoHash.XyoHashProvider) : XyoRelayNode(storageProvider, hashingProvider) {
 
-    private var whoToTalkTo : XyoBridgeTalkTo = XyoBridgeTalkTo.BOTH
-
-    override val procedureCatalogue : XyoNetworkProcedureCatalogueInterface = XyoBridgeCollectorProcedureCatalogue()
+    private var index = 0
+    private var isBridging = true
+    override val procedureCatalogue = XyoBridgeCollectorProcedureCatalogue()
 
     override suspend fun findSomeoneToTalkTo() = suspendCoroutine<XyoNetworkPipe> { cont ->
-        if (whoToTalkTo == XyoBridgeTalkTo.COLLECT || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
-            async {
-                cont.resume(bridgeFromNetwork.find(procedureCatalogue))
+        var bridgeFromFinder : Deferred<XyoNetworkPipe?>? = null
+        var bridgeToFinder : Deferred<XyoNetworkPipe?>? = null
+        var bridgeFromFinderHandler : Deferred<Unit>?= null
+        var bridgeToFinderHandler : Deferred<Unit>? = null
+
+        bridgeFromFinderHandler = GlobalScope.async {
+            if (index % WHEN_TO_FORCE_BRIDGE == 0 && isBridging) {
+                delay(PRIORITY_HEAD_START.toLong())
             }
+
+            bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
+            val con = bridgeFromFinder?.await()!!
+            index++
+
+            bridgeFromNetwork.stop()
+            bridgeToNetwork.stop()
+
+            cont.resume(con)
+            bridgeToFinder?.cancel()
+            bridgeToFinder?.cancelChildren()
+            bridgeFromFinder?.cancel()
+            bridgeFromFinder?.cancelChildren()
+            bridgeToFinderHandler?.cancelChildren()
+            bridgeToFinderHandler?.cancel()
+            bridgeFromFinderHandler?.cancel()
+            bridgeFromFinderHandler?.cancelChildren()
+            coroutineContext.cancel()
+            return@async
         }
 
-        if (whoToTalkTo == XyoBridgeTalkTo.SEND || whoToTalkTo == XyoBridgeTalkTo.BOTH) {
-            async {
-                cont.resume(bridgeToNetwork.find(procedureCatalogue))
+        if (isBridging) {
+            bridgeToFinderHandler = GlobalScope.async {
+                if (index % WHEN_TO_FORCE_BRIDGE != 0) {
+                    delay((PRIORITY_HEAD_START.toLong()))
+                }
+
+                bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
+                val con = bridgeToFinder?.await()!!
+                index++
+
+                bridgeFromNetwork.stop()
+                bridgeToNetwork.stop()
+
+                cont.resume(con)
+                bridgeFromFinder?.cancel()
+                bridgeFromFinder?.cancelChildren()
+                bridgeToFinder?.cancel()
+                bridgeToFinder?.cancelChildren()
+                bridgeFromFinderHandler.cancelChildren()
+                bridgeFromFinderHandler.cancel()
+                bridgeToFinderHandler?.cancel()
+                bridgeToFinderHandler?.cancelChildren()
+                coroutineContext.cancel()
+                return@async
             }
         }
     }
 
+    fun enableBridging (boolean: Boolean) {
+        isBridging = boolean
+        procedureCatalogue.enableBridging(boolean)
+    }
+
     companion object {
-        private enum class XyoBridgeTalkTo {
-            COLLECT,
-            SEND,
-            BOTH
-        }
+        const val WHEN_TO_FORCE_BRIDGE = 4
+        const val PRIORITY_HEAD_START = 180_000
     }
 }
