@@ -27,11 +27,11 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    //implementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:develop-SNAPSHOT'
-    implementation project (':mod-tcp-kotlin')
+    testImplementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:v0.1.0-beta.0'
+    // implementation project (':mod-tcp-kotlin')
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0"
 
-    // implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:develop-SNAPSHOT'
-    implementation project (':sdk-core-kotlin')
+    implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:v0.1.0-beta.2'
+   //  implementation project (':sdk-core-kotlin')
 }

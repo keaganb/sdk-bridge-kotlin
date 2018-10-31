@@ -39,7 +39,6 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
 
             bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
             val con = bridgeFromFinder?.await()!!
-            println("RESUMED 1337")
             index++
 
             bridgeFromNetwork.stop()
@@ -92,7 +91,7 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
     }
 
     companion object {
-        const val WHEN_TO_FORCE_BRIDGE = 10
-        const val PRIORITY_HEAD_START = 120_000
+        const val WHEN_TO_FORCE_BRIDGE = 4
+        const val PRIORITY_HEAD_START = 180_000
     }
 }
