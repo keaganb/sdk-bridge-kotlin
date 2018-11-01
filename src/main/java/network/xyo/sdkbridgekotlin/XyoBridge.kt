@@ -38,13 +38,16 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
             }
 
             bridgeFromFinder = bridgeFromNetwork.find(procedureCatalogue)
-            val con = bridgeFromFinder?.await()!!
+            val con = bridgeFromFinder?.await()
             index++
 
             bridgeFromNetwork.stop()
             bridgeToNetwork.stop()
 
-            cont.resume(con)
+            con?.let {
+                cont.resume(it)
+            }
+
             bridgeToFinder?.cancel()
             bridgeToFinder?.cancelChildren()
             bridgeFromFinder?.cancel()
@@ -64,13 +67,16 @@ open class XyoBridge (private val bridgeFromNetwork : XyoNetworkProviderInterfac
                 }
 
                 bridgeToFinder = bridgeToNetwork.find(procedureCatalogue)
-                val con = bridgeToFinder?.await()!!
+                val con = bridgeToFinder?.await()
                 index++
 
                 bridgeFromNetwork.stop()
                 bridgeToNetwork.stop()
 
-                cont.resume(con)
+                con?.let {
+                    cont.resume(it)
+                }
+
                 bridgeFromFinder?.cancel()
                 bridgeFromFinder?.cancelChildren()
                 bridgeToFinder?.cancel()
