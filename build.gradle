@@ -3,6 +3,8 @@ group="com.github.XYOracleNetwork"
 
 buildscript {
     ext.kotlin_version = '1.3.0'
+    ext.local = false
+
     repositories {
         mavenCentral()
     }
@@ -24,14 +26,16 @@ test {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.3.0"
     compile "org.jetbrains.kotlin:kotlin-reflect"
-
     testImplementation 'junit:junit:4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:v0.1.0-beta.0'
-    // implementation project (':mod-tcp-kotlin')
-
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
-    implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:v0.1.0-beta.2'
-   //  implementation project (':sdk-core-kotlin')
+
+    if (local) {
+        testImplementation project (':mod-tcp-kotlin')
+        implementation project (':sdk-core-kotlin')
+    } else {
+        testImplementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:v0.1.0-beta.0'
+        implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:v0.1.0-beta.3'
+    }
 }
