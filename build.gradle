@@ -51,7 +51,7 @@ dependencies {
         testImplementation project (':mod-tcp-kotlin')
         implementation project (':sdk-core-kotlin')
     } else {
-        testImplementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:v0.1.0-beta.0'
+        testImplementation 'com.github.XYOracleNetwork:mod-tcp-kotlin:v0.1.0-beta.1'
         implementation 'com.github.XYOracleNetwork:sdk-core-kotlin:v0.1.0-beta.3'
     }
 }
